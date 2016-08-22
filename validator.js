@@ -38,7 +38,7 @@
     roBloodTypeI: /^(?:[ABO]|AB)$/i,
 
     roHexColorI: /^#?([0-9A-F]{3}|[0-9A-F]{6})$/i,
-
+    roDate: /^\d{4}-(?:(?:0?2-(0[1-9]|[12][0-9]))|(?:0?[13578]|1[02])-(?:0?[1-9]|[1-2]\d|3[01])|(?:0?[469]|11)-(?:0?[1-9]|[1-2]\d|30))|(?:(?:(?:0[1-9]|[12][0-9])\/0?2)|(?:0?[1-9]|[1-2]\d|3[01])\/(?:0?[13578]|1[02])|(?:(?:0?[1-9]|[1-2]\d|30)\/0?[469]|11))\/\d{4}$/,
     roMonth: /^(?:0?[1-9]|1[0-2])$/,
     roWeek: /^(?:0?[1-9]|[1-4]\d|5[0-2])$/,
     roTime: /^(?:[0-1]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
@@ -52,34 +52,51 @@
     }
   };
 
-  //Object.keys(rs).forEach(function(rName, i, rs){
-  //  if(rName.charAt(0) === 'r' && rName.charAt(1) !== 'o') return;
-  //  var roName = 'ro' +  rName.slice(1),
+  //(function(rs) {
+  //  Object.keys(rs).forEach(function (rName, i, rs) {
+  //    var roName = '',
   //      r = rs[rName],
-  //      roSource = '^(?:' + r.source + ')+$',
+  //      roSource = '',
   //      gim = '';
   //
-  //  r.global && gim += 'g';
-  //  r.ignoreCase && gim += 'i';
-  //  r.multiline && gim += 'm';
-  //
-  //  rs[roName] = new RegExp(roSource, gim);
-  //});
-  //
-  //var arrSfns = [];
-  //Object.keys(rs).forEach(function(rName, i, rs){
-  //  if(rName.charAt(0) === 'r'){
-  //    var sfn = ': function(s){ return this.' + rName + '.test(s); }';
-  //    if(rName.charAt(1) === 'o'){
-  //      arrSfns.push('is' + rName.slice(2) + sfn);
+  //    if (rName.charAt(0) === 'r'){
+  //      if(rName.charAt(1) !== 'o'){
+  //        roName = 'ro' + rName.slice(1);
+  //        if(!rs[roName]){
+  //          roSource = '^(?:' + r.source + ')+$';
+  //        }
+  //      }
+  //      else{
+  //        roName = 'r' + rName.slice(2);
+  //        if(!rs[roName] && r.source.charAt(0) === '^' && r.source.slcie(-1) === '$'){
+  //          roSource = r.source.slice(0, -1);
+  //        }
+  //      }
   //    }
-  //    else{
-  //      arrSfns.push('has' + rName.slice(1) + sfn);
-  //    }
-  //  }
-  //});
   //
-  //console.log('{' + arrSfns.join(',') + '}')
+  //    r.global && gim += 'g';
+  //    r.ignoreCase && gim += 'i';
+  //    r.multiline && gim += 'm';
+  //
+  //    rs[roName] = new RegExp(roSource, gim);
+  //  });
+  //})(rs);
+
+  //(function(rs){
+  //  var arrSfn = [];
+  //  Object.keys(rs).forEach(function(rName, i, rs){
+  //    if(rName.charAt(0) === 'r'){
+  //      var sfn = ': function(s){ return this.' + rName + '.test(s); }';
+  //      if(rName.charAt(1) === 'o'){
+  //        arrSfn.push('is' + rName.slice(2) + sfn);
+  //      }
+  //      else{
+  //        arrSfn.push('has' + rName.slice(1) + sfn);
+  //      }
+  //    }
+  //  });
+  //  console.log('{' + arrSfns.join(',') + '}');
+  //})(rs);
 
   function Validator() {
   }
@@ -191,8 +208,14 @@
      */
     isIdNumber: function (s) {
       return this.roIdNumber.test(s) && this.isAreaNumber(s.slice(0, 6))
-        && this.isDate(s.slice(6, 16))
+        && checkDate.bind(this)(s.slice(6, 14))
         && s.charAt(17).toUpperCase() === checksum(s.slice(0, 17));
+
+      function checkDate(s){
+        var year = s.slice(0, 4);
+        return year >= 1900 &&　year <= new Date().getFullYear()
+          && this.isDate(year + '-' + s.clice(4, 6), + '-' + s.clice(6, 8));
+      }
 
       function checksum(idNumber17){
         var sum = 0;
@@ -250,6 +273,36 @@
     },
 
     /**
+     * md5加密串格式
+     * @param {string} s
+     * @returns {boolean}
+     */
+    isMd5: function (s) {
+      return this.roMd5.test(s);
+    },
+
+    /**
+     * uuid格式，分版本号
+     * @param {string} s
+     * @param {number|string} version
+     * @returns {boolean}
+     */
+    isUuid: function (s, version) {
+      var r = this.oRoUuidIs[version];
+      return !!r && r.test(s);
+    },
+
+    /**
+     * 日期格式 maxlength="10"
+     * @param {string} s
+     * @returns {boolean}
+     */
+    isDate: function(s, format){
+      var year = s.slice(0,4);
+      return this.roDate.test(s) && ( RegExp.$1 !== '29' || ( !(year%4) && !!(year%400) ) );
+    },
+
+    /**
      * 月份 1-12
      * @param {string} s
      * @returns {boolean}
@@ -277,36 +330,7 @@
     },
 
     /**
-     * md5加密串格式
-     * @param {string} s
-     * @returns {boolean}
-     */
-    isMd5: function (s) {
-      return this.roMd5.test(s);
-    },
-
-    /**
-     * uuid格式，分版本号
-     * @param {string} s
-     * @param {number|string} version
-     * @returns {boolean}
-     */
-    isUuid: function (s, version) {
-      var r = this.oRoUuidIs[version];
-      return r && r.test(s);
-    },
-
-    /**
-     * 获取字符串字节长度
-     * @param {string} s
-     * @returns {number}
-     */
-    getByteLength: function (s) {
-      return s.replace(this.rDoubleByteG, "**").length;
-    },
-
-    /**
-     * 获取字符串字节长度
+     * 获取字符串的字节长度
      * @param {string} s
      * @returns {number}
      */
