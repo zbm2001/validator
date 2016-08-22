@@ -24,13 +24,13 @@
     rZh: /[\u4e00-\u9fa5\uf900-\ufa2d]/,
     roZh: /^[\u4e00-\u9fa5\uf900-\ufa2d]+$/,
     roMobileNumber: /^1\d{10}$/,
-    // µç»°µØÇøºÅ
+    // ç”µè¯åœ°åŒºå·
     roAreaCode: /^0(?:10|2\d|[3-9]\d{2})$/,
-    // ¹Ì¶¨µç»°ºÅÂë
+    // å›ºå®šç”µè¯å·ç 
     roTelNumber: /^[1-9]\d{6,7}$/,
-    // µØÇø±àºÅ
+    // åœ°åŒºç¼–å·
     roAreaNumber: /^(?:[1-6]\d{5}|(?:71|81|82)0{4})$/,
-    // Éí·ÝÖ¤ºÅ
+    // èº«ä»½è¯å·
     roIdNumber: /^\d{17}[\dxX]$/,
     roEmail: /^[\w-.]+@(?:[\w-]+\.)+[a-z]+$/,
     roUrl: /^(?:[a-zA-Z]+:\/\/)?(?:\w+\.)+[a-z]+(?::\d+)?(?:\/\S*)?$/,
@@ -103,7 +103,7 @@
 
   Object.assign(Validator.prototype, rs, {
     /**
-     * Êý×Ö
+     * æ•°å­—
      * @param {string} s
      * @returns {boolean}
      */
@@ -112,7 +112,7 @@
     },
 
     /**
-     * ÕûÐÍ
+     * æ•´åž‹
      * @param {string} s
      * @returns {boolean}
      */
@@ -121,7 +121,7 @@
     },
 
     /**
-     * ¸¡µãÀàÐÍ
+     * æµ®ç‚¹ç±»åž‹
      * @param {string} s
      * @returns {boolean}
      */
@@ -130,7 +130,7 @@
     },
 
     /**
-     * °üº¬Ë«×Ö½Ú
+     * åŒ…å«åŒå­—èŠ‚
      * @param {string} s
      * @returns {boolean}
      */
@@ -139,7 +139,7 @@
     },
 
     /**
-     * Ö»°üº¬Ë«×Ö½Ú
+     * åªåŒ…å«åŒå­—èŠ‚
      * @param {string} s
      * @returns {boolean}
      */
@@ -148,7 +148,7 @@
     },
 
     /**
-     * °üº¬ÖÐÎÄ
+     * åŒ…å«ä¸­æ–‡
      * @param {string} s
      * @returns {boolean}
      */
@@ -157,7 +157,7 @@
     },
 
     /**
-     * Ö»°üº¬ÖÐÎÄ
+     * åªåŒ…å«ä¸­æ–‡
      * @param {string} s
      * @returns {boolean}
      */
@@ -166,7 +166,7 @@
     },
 
     /**
-     * ÊÖ»úºÅÂë
+     * æ‰‹æœºå·ç 
      * @param {string} s
      * @returns {boolean}
      */
@@ -175,7 +175,7 @@
     },
 
     /**
-     * µç»°µØÇøºÅ
+     * ç”µè¯åœ°åŒºå·
      * @param {string} s
      * @returns {boolean}
      */
@@ -184,7 +184,7 @@
     },
 
     /**
-     * ¹Ì¶¨µç»°ºÅÂë
+     * å›ºå®šç”µè¯å·ç 
      * @param {string} s
      * @returns {boolean}
      */
@@ -193,7 +193,7 @@
     },
 
     /**
-     * ÖÐ¹úµØÇø´úÂë
+     * ä¸­å›½åœ°åŒºä»£ç 
      * @param {string} s
      * @returns {boolean}
      */
@@ -202,7 +202,7 @@
     },
 
     /**
-     * Éí·ÝÖ¤ºÅ
+     * èº«ä»½è¯å·
      * @param {string} s
      * @returns {boolean}
      */
@@ -213,7 +213,7 @@
 
       function checkDate(s){
         var year = s.slice(0, 4);
-        return year >= 1900 &&¡¡year <= new Date().getFullYear()
+        return year >= 1900 &&ã€€year <= new Date().getFullYear()
           && this.isDate(year + '-' + s.clice(4, 6), + '-' + s.clice(6, 8));
       }
 
@@ -228,7 +228,7 @@
     },
 
     /**
-     * email ¸ñÊ½
+     * email æ ¼å¼
      * @param {string} s
      * @returns {boolean}
      */
@@ -237,7 +237,7 @@
     },
 
     /**
-     * url ¸ñÊ½
+     * url æ ¼å¼
      * @param {string} s
      * @returns {boolean}
      */
@@ -246,7 +246,7 @@
     },
 
     /**
-     * QQ ºÅ
+     * QQ å·
      * @param {string} s
      * @returns {boolean}
      */
@@ -255,7 +255,7 @@
     },
 
     /**
-     * ÑªÐÍ
+     * è¡€åž‹
      * @param {string} s
      * @returns {boolean}
      */
@@ -264,7 +264,7 @@
     },
 
     /**
-     * rgb256É«
+     * rgb256è‰²
      * @param {string} s
      * @returns {boolean}
      */
@@ -273,7 +273,7 @@
     },
 
     /**
-     * md5¼ÓÃÜ´®¸ñÊ½
+     * md5åŠ å¯†ä¸²æ ¼å¼
      * @param {string} s
      * @returns {boolean}
      */
@@ -282,7 +282,7 @@
     },
 
     /**
-     * uuid¸ñÊ½£¬·Ö°æ±¾ºÅ
+     * uuidæ ¼å¼ï¼Œåˆ†ç‰ˆæœ¬å·
      * @param {string} s
      * @param {number|string} version
      * @returns {boolean}
@@ -293,7 +293,7 @@
     },
 
     /**
-     * ÈÕÆÚ¸ñÊ½ maxlength="10"
+     * æ—¥æœŸæ ¼å¼ maxlength="10"
      * @param {string} s
      * @returns {boolean}
      */
@@ -303,7 +303,7 @@
     },
 
     /**
-     * ÔÂ·Ý 1-12
+     * æœˆä»½ 1-12
      * @param {string} s
      * @returns {boolean}
      */
@@ -312,7 +312,7 @@
     },
 
     /**
-     * ÖÜÊý 1-52
+     * å‘¨æ•° 1-52
      * @param {string} s
      * @returns {boolean}
      */
@@ -321,7 +321,7 @@
     },
 
     /**
-     * Ê±¼ä¸ñÊ½ hh:mm:ss SSS
+     * æ—¶é—´æ ¼å¼ hh:mm:ss SSS
      * @param {string} s
      * @returns {boolean}
      */
@@ -330,7 +330,7 @@
     },
 
     /**
-     * »ñÈ¡×Ö·û´®µÄ×Ö½Ú³¤¶È
+     * èŽ·å–å­—ç¬¦ä¸²çš„å­—èŠ‚é•¿åº¦
      * @param {string} s
      * @returns {number}
      */
