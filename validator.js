@@ -13,7 +13,7 @@
 (function () {
 
   var rs = {
-
+    // "ro" 前缀表示 regexp only，及字符串从行首到行尾只包含指定的匹配模式
     roNumber: /^\d+$/,
     roInt: /^[-+]?\d+$/,
     roFloat: /^[-+]?\d+(?:\.\d+)?$/,
@@ -28,10 +28,23 @@
     roAreaCode: /^0(?:10|2\d|[3-9]\d{2})$/,
     // 固定电话号码
     roTelNumber: /^[1-9]\d{6,7}$/,
-    // 地区编号
+    // 邮政编码
+    roPostalcode: /^\d{6}$/,
+    // 地区编码
     roAreaNumber: /^(?:[1-6]\d{5}|(?:71|81|82)0{4})$/,
-    // 身份证号
-    roIdNumber: /^\d{17}[\dxX]$/,
+    // 身份证号：前6位是地区编码
+    roIdNumber: /^(?:[1-6]\d{5}|(?:71|81|82)0{4})\d{11}[\dxX]$/,
+    // 营业执照注册号：前6位是地区编码
+    roBusinessLicenseNumber: /^(?:[1-6]\d{5}|(?:71|81|82)0{4})\d{9}$/,
+    // 组织机构代码
+    roOrgCode: /^[\dA-Z]{8}\-?[\dX]$/,
+    // 经济类型代码 economic-category-code
+    // roEconomicCategoryCode: /^\d{3}$/,
+    roDigital3: /^\d{3}$/,
+    // 国民经济行业分类代码 national-economy-industry-classification-code
+    // roNationalEconomyIndustryClassificationCode: /^[A-Z]\d{0,4}$/,
+    roCapitalDigital04: /^[A-Z]\d{0,4}$/,
+
     roEmail: /^[\w-.]+@(?:[\w-]+\.)+[a-z]+$/,
     roUrl: /^(?:[a-zA-Z]+:\/\/)?(?:\w+\.)+[a-z]+(?::\d+)?(?:\/\S*)?$/,
     roQQNumber: /^[1-9]\d{1,10}$/,
@@ -51,6 +64,24 @@
       all: /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i
     }
   };
+
+  Object.assign || (Object.assign = function assign(target) {
+    if (target == null) {
+      throw new TypeError('Cannot convert undefined or null to object');
+    }
+    var output = Object(target), i = 1, l = arguments.length;
+    for (; i < l; i++) {
+      var source = arguments[i];
+      if (source != null) {
+        for (var prop in source) {
+          if (source.hasOwnProperty(prop)) {
+            output[prop] = source[prop];
+          }
+        }
+      }
+    }
+    return output;
+  });
 
   //(function(rs) {
   //  Object.keys(rs).forEach(function (rName, i, rs) {
@@ -193,7 +224,16 @@
     },
 
     /**
-     * 中国地区代码
+     * 邮政编码
+     * @param {string} s
+     * @returns {boolean}
+     */
+    isPostalcode: function (s) {
+      return this.roPostalcode.test(s);
+    },
+
+    /**
+     * 中国地区编码
      * @param {string} s
      * @returns {boolean}
      */
@@ -202,7 +242,7 @@
     },
 
     /**
-     * 身份证号
+     * 身份证号：前6位是地区编码
      * @param {string} s
      * @returns {boolean}
      */
@@ -217,14 +257,77 @@
           && this.isDate(year + '-' + s.clice(4, 6), + '-' + s.clice(6, 8));
       }
 
-      function checksum(idNumber17){
+      function checksum(v){
         var sum = 0;
-        idNumber17.split('').reverse().forEach(function( n, i ){
+        v.split('').reverse().forEach(function( n, i ){
           sum += n * (Math.pow(2, (i + 2) - 1) % 11);
         });
         sum = (12 - sum % 11) % 11;
         return sum > 9 ? 'X' : String(sum);
       }
+    },
+
+    /**
+     * 营业执照注册号：前6位是地区编码
+     * @param {string} s
+     * @returns {boolean}
+     */
+    isBusinessLicenseNumber: function (s) {
+      return s.length === 15 && this.roBusinessLicenseNumber.test(s)  && checksum(s);
+      // 440000000085209
+      function checksum( v ){
+        var a = [], m = 10, p = [m], s = [], i = -1, l = v.length, t;
+        while( ++i < l ){
+          a[ i ] = parseInt( v.charAt(i) );
+          s[ i ] = ( p[i] % (m+1) ) + a[i];
+          t = s[i] % m;
+          p[ i + 1 ] = ( t || 10 ) * 2;
+        }
+        return s[ l - 1 ] % m === 1;
+      }
+    },
+
+    /**
+     * 组织机构代码
+     * @param {string} s
+     * @returns {boolean}
+     */
+    isOrgCode: function (s) {
+      return this.roOrgCode.test(s) && s.slice(-1) === checksum(s);
+      // 73766533-0
+      function checksum(v){
+        var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+          crcs = [3, 7, 9, 10, 5, 8, 4, 2],
+          o = {}, l = code.length, c, sum = 0, i = -1;
+        while( ++i < l ){
+          o[ code[i] ] = i;
+        }
+        i = -1;
+        while( ++i < 8 ){
+          c = v.charAt( i );
+          sum += o[c] * crcs[i];
+        }
+        c = sum % 11;
+        return c > 1 ? String( 11 - c ) : c ? 'X' : '0';
+      }
+    },
+
+    /**
+     * 经济类型代码：economic-category-code
+     * @param {string} s
+     * @returns {boolean}
+     */
+    isEconomicCategoryCode: function (s) {
+      return this.roDigital3.test(s);
+    },
+
+    /**
+     * 国民经济行业分类代码：national-economy-industry-classification-code
+     * @param {string} s
+     * @returns {boolean}
+     */
+    isNationalEconomyIndustryClassificationCode: function (s) {
+      return this.roCapitalDigital04.test(s);
     },
 
     /**
@@ -328,6 +431,7 @@
     isTime: function (s) {
       return this.roTime.test(s);
     },
+
 
     /**
      * 获取字符串的字节长度
