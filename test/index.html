@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>datejs</title>
+<script src="../validator.js"></script>
+<script>
+(function(){
+this.writeForin = function(obj, name){
+  var html = '<ul><li>' + 
+  Object.keys(obj).map(function(key){
+    return 'validator.' + key + 
+    ' (' + (typeof obj[key] == 'function' ? '方法' : '属性') + ')';
+  }).join('</li><li>') + 
+  '</li></ul>'
+
+  document.write(html);
+}
+})();
+</script>
+</head>
+
+<body>
+<h2>String.Validator原型方法和属性</h2>
+<script>
+writeForin(String.Validator.prototype, 'validator');
+</script>
+<h2>String.Validator静态方法和属性</h2>
+<script>
+writeForin(String.Validator, 'Validator');
+</script>
+</body>
+</html>

@@ -1,13 +1,3 @@
-/*
- * @name: datejs
- * @version: 1.0.0
- * @description: javascript Date Object extend
- * @author: zbm2001@aliyun.com
- * @license: Apache 2.0
- */
-(function (exports) {
-'use strict';
-
 //import assign from './util/assign';
 
   var rs = {
@@ -425,4 +415,4 @@
 
 String.Validator = Validator;
 
-}((this.Validator = this.Validator || {})));
+export default Validator;
