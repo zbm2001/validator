@@ -1,2 +1,3 @@
-//import './core';
-export * from './core';
+import './core';
+
+//export * from './core';

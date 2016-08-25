@@ -1,4 +1,4 @@
-//import assign from './util/assign';
+import './util/assign';
 
   var rs = {
     // "ro" 前缀表示 regexp only，及字符串从行首到行尾只包含指定的匹配模式
@@ -224,7 +224,7 @@
       function checkDate(s){
         var year = s.slice(0, 4);
         return year >= 1900 &&　year <= new Date().getFullYear()
-          && this.isDate(year + '-' + s.clice(4, 6), + '-' + s.clice(6, 8));
+          && this.isDate(year + '-' + s.slice(4, 6) + '-' + s.slice(6, 8));
       }
 
       function checksum(v){

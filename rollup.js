@@ -24,7 +24,7 @@ rollup.rollup({
       exclude: 'node_modules/**'
     })
     // 其他插件，如压缩代码等
-    ,uglify()
+    // ,uglify()
   ]
 }).then(bundle => {
 
@@ -36,7 +36,7 @@ rollup.rollup({
   });
 
   // // dest 生成的目标文件
-  fs.writeFileSync( 'validator.min.js', banner + '\n' + result.code );
+  fs.writeFileSync( 'validator.js', banner + '\n' + result.code );
   
   // // bundle写入方式
   // bundle.write({
