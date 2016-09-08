@@ -332,7 +332,7 @@ import './util/assign';
      * @param {string} s
      * @returns {boolean}
      */
-    isBloodTypeI: function (s) {
+    isBloodType: function (s) {
       return this.roBloodTypeI.test(s);
     },
 
@@ -402,7 +402,6 @@ import './util/assign';
       return this.roTime.test(s);
     },
 
-
     /**
      * 获取字符串的字节长度
      * @param {string} s
@@ -410,7 +409,42 @@ import './util/assign';
      */
     getByteLength: function (s) {
       return s.replace(this.roDoubleBytesG, "$1$1").length;
-    }
+    },
+
+    /**
+ * 验证字符串密码安全强度
+ *     字符范围包括：数字、大小写字母、其他键盘字符
+ * @param {string} value 字符串
+ * @returns {Number} range{0,3}
+ *   返回 0 不符合模式
+ *   返回 1 能符合模式，安全强度低
+ *   返回 2 能符合模式，安全强度中
+ *   返回 3 能符合模式，安全强度高
+ * @api public
+ */
+checkSafeRank: function(value){
+  
+  var r = /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]{6,16}$/;
+  
+  // 不符合模式
+  if(!r.test(value)){
+    return 0;
+  }
+  // 强度低：只包含数字，或只包含特殊字符，或只包含字母
+  else if(!/\D/.test(value) || !/\w/.test(value) || !/[^a-zA-Z]/.test(value)){
+    return 1;
+  }
+  // 强度高：包含全部三种类型字符
+  else if(/\d/.test(value) && /[a-zA-Z]/.test(value) && /\W-/.test(value)){
+    return 3;
+  }
+  // 强度中：只包含两种类型字符
+  else{
+    return 2;
+  }
+  
+}
+
   });
 
 String.Validator = Validator;
