@@ -8,6 +8,13 @@ const fs = require('fs');
 const rollup = require('rollup');
 const buble = require('rollup-plugin-buble');
 const uglify = require('rollup-plugin-uglify');
+const uglifyjs = require('uglify-js');
+
+var minifyOptions = { fromString: true };
+function minify(code){
+  var result = uglifyjs.minify(code, minifyOptions);
+  return result.code;
+}
 
 var pkg = JSON.parse(fs.readFileSync('./package.json'));
 
@@ -35,8 +42,10 @@ rollup.rollup({
     sourceMap: false
   });
 
-  // // dest 生成的目标文件
+  // dest 生成的目标文件
   fs.writeFileSync( 'validator.js', banner + '\n' + result.code );
+  fs.writeFileSync( 'validator.min.js', banner + '\n' + minify(result.code) );
+  
   
   // // bundle写入方式
   // bundle.write({
