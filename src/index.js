@@ -1,3 +1,3 @@
 import './core';
 
-//export * from './core';
+export default String.Validator

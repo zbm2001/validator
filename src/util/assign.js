@@ -1,13 +1,18 @@
 import isNativeFunction from './isNativeFunction';
 
-export default isNativeFunction(Object.assign) ? Object.assign :
-  (Object.assign = function assign(target) {
+isNativeFunction(Object.assign) ||
+  // es5 Object.assign
+  (Object.assign = function assign(target/*, ...args*/) {
     if (target == null) {
       throw new TypeError('Cannot convert undefined or null to object');
     }
-    var output = Object(target), i = 1, l = arguments.length, prop, source;
-    for (; i < l; i++) {
-      source = arguments[i];
+    var output = Object(target),
+      i = -1,
+      args = Array.prototype.slice.call(arguments, 1),
+      l = args.length,
+      prop, source;
+    while (++i < l) {
+      source = args[i];
       if (source != null) {
         for (prop in source) {
           if (source.hasOwnProperty(prop)) {
@@ -19,3 +24,4 @@ export default isNativeFunction(Object.assign) ? Object.assign :
     return output;
   });
 
+export default Object.assign;

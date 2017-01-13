@@ -1,4 +1,4 @@
-import './util/assign';
+import {assign} from 'z-utils';
 
 function Validator() {}
 
