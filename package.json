@@ -1,5 +1,5 @@
 {
-  "name": "validator",
+  "name": "z-validator",
   "version": "1.0.0",
   "description": "javascript Date Object extend",
   "scripts": {
@@ -10,12 +10,10 @@
     "url": "git+https://github.com/zbm2001/validator.git"
   },
   "keywords": [
-    "datejs",
+    "validator",
     "js",
     "javascript",
-    "date",
-    "prototype",
-    "extend"
+    "string"
   ],
   "author": "zbm2001@aliyun.com",
   "license": "Apache 2.0",
