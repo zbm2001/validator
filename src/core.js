@@ -1,8 +1,8 @@
-import {assign} from 'z-utils';
+import {assign} from 'z-utils/src'
 
 function Validator() {}
 
-Object.assign(Validator, {
+assign(Validator, {
   // "ro" 前缀表示 regexp only，即字符串从行首到行尾只包含指定的匹配模式
   roNumber: /^\d+$/,
   roInt: /^[-+]?\d+$/,
@@ -54,10 +54,10 @@ Object.assign(Validator, {
   },
 
   roKeyboardCharacter: /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]+$/
-});
+})
 
 
-Object.assign(Validator.prototype, Validator, {
+assign(Validator.prototype, Validator, {
   /**
    * 数字
    * @param {string} s
@@ -65,7 +65,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isNumber: function(s) {
-    return this.roNumber.test(s);
+    return this.roNumber.test(s)
   },
 
   /**
@@ -75,7 +75,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isInt: function(s) {
-    return this.roInt.test(s);
+    return this.roInt.test(s)
   },
 
   /**
@@ -85,7 +85,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isFloat: function(s) {
-    return this.roFloat.test(s);
+    return this.roFloat.test(s)
   },
 
   /**
@@ -95,7 +95,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   hasDoubleByte: function(s) {
-    return this.rDoubleByte.test(s);
+    return this.rDoubleByte.test(s)
   },
 
   /**
@@ -105,7 +105,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isDoubleByte: function(s) {
-    return this.roDoubleByte.test(s);
+    return this.roDoubleByte.test(s)
   },
 
   /**
@@ -115,7 +115,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   hasZh: function(s) {
-    return this.rZh.test(s);
+    return this.rZh.test(s)
   },
 
   /**
@@ -125,7 +125,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isZh: function(s) {
-    return this.roZh.test(s);
+    return this.roZh.test(s)
   },
 
   /**
@@ -135,7 +135,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isMobileNumber: function(s) {
-    return this.roMobileNumber.test(s);
+    return this.roMobileNumber.test(s)
   },
 
   /**
@@ -145,7 +145,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isAreaCode: function(s) {
-    return this.roAreaCode.test(s);
+    return this.roAreaCode.test(s)
   },
 
   /**
@@ -155,7 +155,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isTelNumber: function(s) {
-    return this.roTelNumber.test(s);
+    return this.roTelNumber.test(s)
   },
 
   /**
@@ -165,7 +165,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isPostalcode: function(s) {
-    return this.roPostalcode.test(s);
+    return this.roPostalcode.test(s)
   },
 
   /**
@@ -175,7 +175,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isAreaNumber: function(s) {
-    return this.roAreaNumber.test(s);
+    return this.roAreaNumber.test(s)
   },
 
   /**
@@ -185,20 +185,20 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isIdNumber: function(s) {
-    return this.roIdNumber.test(s) && this.isAreaNumber(s.slice(0, 6)) && checkDate.bind(this)(s.slice(6, 14)) && s.charAt(17).toUpperCase() === checksum(s.slice(0, 17));
+    return this.roIdNumber.test(s) && this.isAreaNumber(s.slice(0, 6)) && checkDate.bind(this)(s.slice(6, 14)) && s.charAt(17).toUpperCase() === checksum(s.slice(0, 17))
 
     function checkDate(s) {
-      var year = s.slice(0, 4);
-      return year >= 1900 && 　year <= new Date().getFullYear() && this.isDate(year + '-' + s.slice(4, 6) + '-' + s.slice(6, 8));
+      var year = s.slice(0, 4)
+      return year >= 1900 && 　year <= new Date().getFullYear() && this.isDate(year + '-' + s.slice(4, 6) + '-' + s.slice(6, 8))
     }
 
     function checksum(v) {
-      var sum = 0;
+      var sum = 0
       v.split('').reverse().forEach(function(n, i) {
-        sum += n * (Math.pow(2, (i + 2) - 1) % 11);
-      });
-      sum = (12 - sum % 11) % 11;
-      return sum > 9 ? 'X' : String(sum);
+        sum += n * (Math.pow(2, (i + 2) - 1) % 11)
+      })
+      sum = (12 - sum % 11) % 11
+      return sum > 9 ? 'X' : String(sum)
     }
   },
 
@@ -209,7 +209,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isBusinessLicenseNumber: function(s) {
-    return s.length === 15 && this.roBusinessLicenseNumber.test(s) && checksum(s);
+    return s.length === 15 && this.roBusinessLicenseNumber.test(s) && checksum(s)
     // 440000000085209
     function checksum(v) {
       var a = [],
@@ -218,14 +218,14 @@ Object.assign(Validator.prototype, Validator, {
         s = [],
         i = -1,
         l = v.length,
-        t;
+        t
       while (++i < l) {
-        a[i] = parseInt(v.charAt(i));
-        s[i] = (p[i] % (m + 1)) + a[i];
-        t = s[i] % m;
-        p[i + 1] = (t || 10) * 2;
+        a[i] = parseInt(v.charAt(i))
+        s[i] = (p[i] % (m + 1)) + a[i]
+        t = s[i] % m
+        p[i + 1] = (t || 10) * 2
       }
-      return s[l - 1] % m === 1;
+      return s[l - 1] % m === 1
     }
   },
 
@@ -236,7 +236,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isOrgCode: function(s) {
-    return this.roOrgCode.test(s) && s.slice(-1) === checksum(s);
+    return this.roOrgCode.test(s) && s.slice(-1) === checksum(s)
     // 73766533-0
     function checksum(v) {
       var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
@@ -244,17 +244,17 @@ Object.assign(Validator.prototype, Validator, {
         o = {},
         l = code.length,
         c, sum = 0,
-        i = -1;
+        i = -1
       while (++i < l) {
-        o[code[i]] = i;
+        o[code[i]] = i
       }
-      i = -1;
+      i = -1
       while (++i < 8) {
-        c = v.charAt(i);
-        sum += o[c] * crcs[i];
+        c = v.charAt(i)
+        sum += o[c] * crcs[i]
       }
-      c = sum % 11;
-      return c > 1 ? String(11 - c) : c ? 'X' : '0';
+      c = sum % 11
+      return c > 1 ? String(11 - c) : c ? 'X' : '0'
     }
   },
 
@@ -265,7 +265,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isEconomicCategoryCode: function(s) {
-    return this.roEconomicCategoryCode.test(s);
+    return this.roEconomicCategoryCode.test(s)
   },
 
   /**
@@ -275,7 +275,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isNationalEconomyIndustryClassificationCode: function(s) {
-    return this.roNationalEconomyIndustryClassificationCode.test(s);
+    return this.roNationalEconomyIndustryClassificationCode.test(s)
   },
 
   /**
@@ -285,7 +285,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isEmail: function(s) {
-    return this.roEmail.test(s);
+    return this.roEmail.test(s)
   },
 
   /**
@@ -295,7 +295,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isUrl: function(s) {
-    return s.length < 2084 && this.roUrl.test(s);
+    return s.length < 2084 && this.roUrl.test(s)
   },
 
   /**
@@ -305,7 +305,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isQQNumber: function(s) {
-    return this.roQQNumber.test(s);
+    return this.roQQNumber.test(s)
   },
 
   /**
@@ -315,7 +315,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isBloodType: function(s) {
-    return this.roBloodTypeI.test(s);
+    return this.roBloodTypeI.test(s)
   },
 
   /**
@@ -325,7 +325,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isHexColor: function(s) {
-    return this.roHexColorI.test(s);
+    return this.roHexColorI.test(s)
   },
 
   /**
@@ -335,7 +335,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isMd5: function(s) {
-    return this.roMd5.test(s);
+    return this.roMd5.test(s)
   },
 
   /**
@@ -346,8 +346,8 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isUuid: function(s, version) {
-    var r = this.oRoUuidIs[version];
-    return !!r && r.test(s);
+    var r = this.oRoUuidIs[version]
+    return !!r && r.test(s)
   },
 
   /**
@@ -357,8 +357,8 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isDate: function(s, format) {
-    var year = s.slice(0, 4);
-    return this.roDate.test(s) && (RegExp.$1 !== '29' || (!(year % 4) && !!(year % 400)));
+    var year = s.slice(0, 4)
+    return this.roDate.test(s) && (RegExp.$1 !== '29' || (!(year % 4) && !!(year % 400)))
   },
 
   /**
@@ -368,7 +368,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isMonth: function(s) {
-    return this.roMonth.test(s);
+    return this.roMonth.test(s)
   },
 
   /**
@@ -378,7 +378,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isWeek: function(s) {
-    return this.roWeek.test(s);
+    return this.roWeek.test(s)
   },
 
   /**
@@ -388,7 +388,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   isTime: function(s) {
-    return this.roTime.test(s);
+    return this.roTime.test(s)
   },
 
   /**
@@ -398,7 +398,7 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   getByteLength: function(s) {
-    return s.replace(this.rDoubleBytesG, "$1$1").length;
+    return s.replace(this.rDoubleBytesG, "$1$1").length
   },
 
   /**
@@ -416,35 +416,32 @@ Object.assign(Validator.prototype, Validator, {
    * @api public
    */
   checkKeyboardCharacterRank: function(s, minLength, maxLength) {
-
     var l = s.length,
       min = 1,
-      max = Infinity;
+      max = Infinity
 
-    (minLength = Number(minLength)) === minLength && (min = minLength < 1 ? 1 : minLength);
-    (maxLength = Number(maxLength)) === maxLength && (max = maxLength < min ? min : maxLength);
+    (minLength = Number(minLength)) === minLength && (min = minLength < 1 ? 1 : minLength)
+    (maxLength = Number(maxLength)) === maxLength && (max = maxLength < min ? min : maxLength)
 
     // 不包含键盘字符
     if (l < min || l > max || !this.roKeyboardCharacter.test(s)) {
-      return 0;
+      return 0
     }
     // 强度低：只包含数字，或只包含特殊字符，或只包含字母
     else if (l < 2 || !/\D/.test(s) || !/\w/.test(s) || !/[^a-zA-Z]/.test(s)) {
-      return 1;
+      return 1
     }
     // 强度高：包含全部三种类型字符
     else if (l > 2 && /\d/.test(s) && /[a-zA-Z]/.test(s) && /[\W_]/.test(s)) {
-      return 3;
+      return 3
     }
     // 强度中：只包含两种类型字符
     else {
-      return 2;
+      return 2
     }
 
   }
 
-});
+})
 
-String.Validator = Validator;
-
-export default Validator;
+export default Validator

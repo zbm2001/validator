@@ -1,3 +1,1 @@
-import './core';
-
-export default String.Validator
+export {default as Validator} from './core'
