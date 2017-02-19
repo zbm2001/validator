@@ -40,25 +40,25 @@ module.exports = {
       dest: 'index.js',
       format: 'cjs'
     }/*, {
-      dest: 'utils.amd.js',
+      dest: 'validator.amd.js',
       format: 'amd'
     }, {
-      dest: 'utils.cjs.js',
+      dest: 'validator.cjs.js',
       format: 'cjs'
     }, {
-      dest: 'utils.es.js',
+      dest: 'validator.es.js',
       format: 'es'
     }, {
-      dest: 'utils.iife.js',
+      dest: 'validator.iife.js',
       format: 'iife'
     }, {
-      dest: 'utils.umd.js',
+      dest: 'validator.umd.js',
       format: 'umd'
     }*/
   ],
   banner: banner,
   // format: 'iife', // cjs amd es6 umd iife
-  moduleName: 'utils', // umd 或 iife 模式下，若入口文件含 export，必须加上该属性
-  // dest: 'utils.js', // 输出文件
+  moduleName: 'Validator', // umd 或 iife 模式下，若入口文件含 export，必须加上该属性
+  // dest: 'validator.js', // 输出文件
   // sourceMap: false   // 调试编译
 }
