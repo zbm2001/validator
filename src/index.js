@@ -1,1 +1,1 @@
-export {default as Validator} from './core'
+export {default} from './core'

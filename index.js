@@ -1,13 +1,11 @@
 /*
  * @name: z-validator
- * @version: 1.0.1
+ * @version: 1.0.3
  * @description: javascript Date Object extend
  * @author: zbm2001@aliyun.com
  * @license: Apache 2.0
  */
 'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 const toString = Object.prototype.toString;
 
@@ -109,7 +107,7 @@ if (!isNativeFunction(Object.create)) {
 
 function Validator() {}
 
-assign(Validator, {
+var core = assign(Validator, {
   // "ro" 前缀表示 regexp only，即字符串从行首到行尾只包含指定的匹配模式
   roNumber: /^\d+$/,
   roInt: /^[-+]?\d+$/,
@@ -551,4 +549,4 @@ assign(Validator.prototype, Validator, {
 
 });
 
-exports.Validator = Validator;
+module.exports = core;
