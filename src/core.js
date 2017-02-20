@@ -2,7 +2,7 @@ import {assign} from 'z-utils/src'
 
 function Validator() {}
 
-export default assign(Validator, {
+export default assign(String.Validator = Validator, {
   // "ro" 前缀表示 regexp only，即字符串从行首到行尾只包含指定的匹配模式
   roNumber: /^\d+$/,
   roInt: /^[-+]?\d+$/,

@@ -1,6 +1,6 @@
 /*
  * @name: z-validator
- * @version: 1.0.3
+ * @version: 1.0.4
  * @description: javascript Date Object extend
  * @author: zbm2001@aliyun.com
  * @license: Apache 2.0
@@ -107,7 +107,7 @@ if (!isNativeFunction(Object.create)) {
 
 function Validator() {}
 
-var core = assign(Validator, {
+var core = assign(String.Validator = Validator, {
   // "ro" 前缀表示 regexp only，即字符串从行首到行尾只包含指定的匹配模式
   roNumber: /^\d+$/,
   roInt: /^[-+]?\d+$/,
