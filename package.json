@@ -1,6 +1,6 @@
 {
   "name": "z-validator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "javascript Date Object extend",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
