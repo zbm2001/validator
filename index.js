@@ -1,113 +1,10 @@
-/*
- * @name: z-validator
- * @version: 1.0.7
- * @description: javascript Date Object extend
- * @author: zbm2001@aliyun.com
- * @license: Apache 2.0
- */
 'use strict';
 
-const toString = Object.prototype.toString;
-
-/**
- * judge a object type name
- *
- * @param  {Object|Null|Undefined|String|Number|Function|Array|RegExp|HTMLDocument|HTMLHtmlElement|NodeList|XMLHttpRequest|...} object any
- * @return {String} string of type name, initials Capitalized
- */
-function typeOf(object) {
-  return toString.call(object).slice(8, -1)
-}
-
-const sNativeCode = (isNaN + '').slice((isNaN + '').indexOf('{'));
-/**
- * test function is a javascript native method
- *
- * @param {Function} func native function of javascript
- * @return {Boolean}
- */
-function isNativeFunction(func) {
-  return typeOf(func) === 'Function' && sNativeCode === (func += '').slice(func.indexOf('{'))
-}
-
-if (!isNativeFunction(Object.assign)) {
-  /**
-   * polyfill es2015 Object.assign
-   *
-   * @param {Object} target
-   * @returns {Object} target
-   */
-  Object.assign = function assign(target/*, ...args*/) {
-    if (target == null) {
-      throw new TypeError('Cannot convert undefined or null to object')
-    }
-
-    let output = Object(target),
-        i = -1,
-        args = Array.prototype.slice.call(arguments, 1),
-        l = args.length;
-
-    while (++i < l) {
-      let source = args[i];
-
-      if (source) {
-        for (let prop in source) {
-          if (source.hasOwnProperty(prop)) {
-            output[prop] = source[prop];
-          }
-        }
-      }
-    }
-    return output
-  };
-}
-
-var assign = Object.assign;
-
-if (!isNativeFunction(Object.create)) {
-
-  const hasOwnProperty = Object.prototype.hasOwnProperty;
-  const REFERENCE_TYPE = {
-    'object': !0,
-    'function': !0
-  };
-
-  /**
-   * polyfill es5 Object.create
-   *
-   * @param {Object} object
-   * @param {Object} props
-   * @returns {Object} like {__proto__: *}
-   */
-  Object.create = function create(object, props) {
-    if (object == null || !REFERENCE_TYPE[typeof object]) {
-      throw 'Object prototype may only be an Object or null'
-    }
-
-    let proto = {__proto__: object};
-
-    if (props) {
-      if (REFERENCE_TYPE[typeof props]) {
-        for (let propName in props) {
-          if (hasOwnProperty.call(props, propName)) {
-            let prop = props[propName];
-
-            if (prop && REFERENCE_TYPE[typeof prop]) {
-              object[propName] = prop.value;
-            } else {
-              throw 'Property description must be an object: value'
-            }
-          }
-        }
-      }
-    }
-    return proto
-  };
-}
+var zUtils = require('z-utils');
 
 function Validator() {}
 
-var core = assign(String.Validator = Validator, {
+var core = zUtils.assign(String.Validator = Validator, {
   // "ro" 前缀表示 regexp only，即字符串从行首到行尾只包含指定的匹配模式
   roNumber: /^\d+$/,
   roInt: /^[-+]?\d+$/,
@@ -162,7 +59,7 @@ var core = assign(String.Validator = Validator, {
 });
 
 
-assign(Validator.prototype, Validator, {
+zUtils.assign(Validator.prototype, Validator, {
   /**
    * 数字
    * @param {string} s

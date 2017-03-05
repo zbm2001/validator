@@ -1,4 +1,4 @@
-import {assign} from 'z-utils/src'
+import {assign} from 'z-utils'
 
 function Validator() {}
 
