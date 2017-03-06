@@ -1,7 +1,7 @@
 {
   "name": "z-validator",
-  "version": "1.0.8",
-  "description": "javascript Date Object extend",
+  "version": "1.0.9",
+  "description": "javascript String Object prototype extend",
   "scripts": {
     "dev": "node rollup",
     "build": "rollup -c",
@@ -16,6 +16,7 @@
     "js",
     "javascript",
     "string",
+    "prototype",
     "match",
     "regexp",
     "test",
