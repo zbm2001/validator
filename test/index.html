@@ -60,28 +60,26 @@
 <body>
 <h2>Quick start</h2>
 <pre>
-// 创建一个验证器
-var validator = new String.Validator();
 
 // 验证身份证号：
-validator.isIdNumber('321084197411060037') -> false
+'321084197411060037'.isIdNumber() -> false
 
 // 验证手机号：
-validator.isMobileNumber('13691234555') -> true
+'13691234555'.isMobileNumber() -> true
 
-// 验证isEmail：
-validator.isEmail('saf@@as.sda.cn') -> false
+// 验证email：
+'saf@@as.sda.cn'.isEmail() -> false
 
 </pre>
 
-<h2>String.Validator原型方法和属性</h2>
+<h2>String原型方法和属性</h2>
 <script>
-  document.writeForinConstructor(String.Validator, !0)
+  document.writeForinConstructor(String, !0)
 </script>
 
 <h2>String.Validator静态方法和属性</h2>
 <script>
-  document.writeForinConstructor(String.Validator)
+  document.writeForinConstructor(String)
 </script>
 </body>
 </html>
