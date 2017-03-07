@@ -1,7 +1,7 @@
 # utils
 
 ## 安装
-npm i z-string
+npm i z-validator
 
 ## 组件接口
 为String原生对象及原型附加属性和方法
