@@ -415,7 +415,7 @@ assign(String.prototype, String, {
   checkKeyboardCharacterRank (minLength, maxLength) {
     var l = this.length,
       min = 1,
-      max = Infinity
+      max = Infinity;
 
     (minLength = Number(minLength)) === minLength && (min = minLength < 1 ? 1 : minLength)
     (maxLength = Number(maxLength)) === maxLength && (max = maxLength < min ? min : maxLength)
