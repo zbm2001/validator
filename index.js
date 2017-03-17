@@ -419,7 +419,7 @@ zUtils.assign(String.prototype, String, {
       min = 1,
       max = Infinity;
 
-    (minLength = Number(minLength)) === minLength && (min = minLength < 1 ? 1 : minLength)
+    (minLength = Number(minLength)) === minLength && (min = minLength < 1 ? 1 : minLength);
     (maxLength = Number(maxLength)) === maxLength && (max = maxLength < min ? min : maxLength);
 
     // 不包含键盘字符
