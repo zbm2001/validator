@@ -2,14 +2,17 @@ import {assign} from 'z-utils'
 
 export default assign(String, {
   // "ro" 前缀表示 regexp only，即字符串从行首到行尾只包含指定的匹配模式
-  // 绝对路径的url
+  // 绝对路径的URL
   // 本地磁盘文件路径：
   // file:///D:/ | file://D:/ | file://D:
   // ip地址 + [:端口号]?，端口号最大数为65535：
   // http://1.0.0.0/ | http://1.0.0.0 | http://1.0.0.0: | http://1.0.0.0:/ | http://1.0.0.0:65535/
   // [泛域名.]? + 域名地址（至少一个字母） + .域名后缀（至少为2个字母） + [:端口号]?：
   // http://1.cn
-  rAbsPathI: /(?:^[a-zA-Z][\w-]*:\/\/(?:(?:[\w-]{1,}\.){1,}[a-z]{2,}|(?:[1-9]|[1-9][0-9]|1[0-9]{2}|2[0-5]{2})(?:\.[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-5]{2}){3})(?::(?:(?:[1-5][0-9]|[1-9])[0-9]{0,3}|6(?:[0-4][0-9]{3}|5(?:[0-4][0-9]{2}|5(?:[0-2][0-9]|3[0-5]))))?)?|^file:\/\/\/?[a-z]:)(?:$|\/)/i
+  rAbsPathI: /(?:^file:\/\/\/?[a-z]:|^(?!file:)[a-zA-Z][\w-]*:\/\/(?:(?:[\w-]{1,}\.){1,}[a-z]{2,}|(?:[1-9]|[1-9][0-9]|1[0-9]{2}|2[0-5]{2})(?:\.[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-5]{2}){3})(?::(?:(?:[1-5][0-9]|[1-9])[0-9]{0,3}|6(?:[0-4][0-9]{3}|5(?:[0-4][0-9]{2}|5(?:[0-2][0-9]|3[0-5]))))?)?)(?:$|\/)/i,
+  rURLAbsPathI: /^(?!file:)[a-zA-Z][\w-]*:\/\/(?:(?:[\w-]{1,}\.){1,}[a-z]{2,}|(?:[1-9]|[1-9][0-9]|1[0-9]{2}|2[0-5]{2})(?:\.[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-5]{2}){3})(?::(?:(?:[1-5][0-9]|[1-9])[0-9]{0,3}|6(?:[0-4][0-9]{3}|5(?:[0-4][0-9]{2}|5(?:[0-2][0-9]|3[0-5]))))?)?(?:$|\/)/i,
+  rFileAbsPathI: /^file:\/\/\/?[a-z]:(?:$|\/)/i,
+  rProtocol: /^([a-zA-Z][\w-]*:)/,
   roNumber: /^\d+$/,
   roInt: /^[-+]?\d+$/,
   roFloat: /^[-+]?\d+(?:\.\d+)?$/,
@@ -40,7 +43,7 @@ export default assign(String, {
   roNationalEconomyIndustryClassificationCode: /^[A-Z]\d{0,4}$/,
 
   roEmail: /^[\w-.]+@(?:[\w-]+\.)+[a-z]+$/,
-  roUrl: /^(?:[a-zA-Z]+:\/\/)?(?:\w+\.)+[a-z]+(?::\d+)?(?:\/\S*)?$/,
+  roURLCharacter: /^[\w$-.+!*'(),;@&=/?#[\]|%<>]+$/,
   roQQNumber: /^[1-9]\d{1,10}$/,
   roBloodTypeI: /^(?:[ABO]|AB)$/i,
 
@@ -294,13 +297,35 @@ assign(String.prototype, String, {
   },
 
   /**
-   * url 格式
+   * URL 格式
+   * 注：IE 老版本 URL 受限 2083 字符数
    * @param {string} s
    * @returns {boolean}
    * @api public
    */
-  isUrl () {
-    return s.length < 2084 && this.roUrl.test(this)
+  isURL () {
+    return this.rURLAbsPath.test(this) && this.roURLCharacter.test(this)
+  },
+
+  /**
+   * 文件绝对路径格式
+   * 注：windows 老版本文件路径受限 260 字符数
+   * @param {string} s
+   * @returns {boolean}
+   * @api public
+   */
+  isFileAbsPath () {
+    return this.rFileAbsPath.test(this)
+  },
+
+  /**
+   * URL或文件绝对路径格式
+   * @param {string} s
+   * @returns {boolean}
+   * @api public
+   */
+  isAbsPath () {
+    return this.rAbsPath.test(this)
   },
 
   /**
