@@ -304,7 +304,7 @@ assign(String.prototype, String, {
    * @api public
    */
   isURL () {
-    return this.rURLAbsPath.test(this) && this.roURLCharacter.test(this)
+    return this.rURLAbsPathI.test(this) && this.roURLCharacter.test(this)
   },
 
   /**
@@ -315,7 +315,7 @@ assign(String.prototype, String, {
    * @api public
    */
   isFileAbsPath () {
-    return this.rFileAbsPath.test(this)
+    return this.rFileAbsPathI.test(this)
   },
 
   /**
@@ -325,7 +325,17 @@ assign(String.prototype, String, {
    * @api public
    */
   isAbsPath () {
-    return this.rAbsPath.test(this)
+    return this.rAbsPathI.test(this)
+  },
+
+  /**
+   * 获取URL或文件协议
+   * @param {string} s
+   * @returns {String}
+   * @api public
+   */
+  getProtocol () {
+    return this.rProtocol.test(this) ? RegExp.$1 : ''
   },
 
   /**

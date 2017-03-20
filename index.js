@@ -306,7 +306,7 @@ zUtils.assign(String.prototype, String, {
    * @api public
    */
   isURL: function isURL () {
-    return this.rURLAbsPath.test(this) && this.roURLCharacter.test(this)
+    return this.rURLAbsPathI.test(this) && this.roURLCharacter.test(this)
   },
 
   /**
@@ -317,7 +317,7 @@ zUtils.assign(String.prototype, String, {
    * @api public
    */
   isFileAbsPath: function isFileAbsPath () {
-    return this.rFileAbsPath.test(this)
+    return this.rFileAbsPathI.test(this)
   },
 
   /**
@@ -327,7 +327,17 @@ zUtils.assign(String.prototype, String, {
    * @api public
    */
   isAbsPath: function isAbsPath () {
-    return this.rAbsPath.test(this)
+    return this.rAbsPathI.test(this)
+  },
+
+  /**
+   * 获取URL或文件协议
+   * @param {string} s
+   * @returns {String}
+   * @api public
+   */
+  getProtocol: function getProtocol () {
+    return this.rProtocol.test(this) ? RegExp.$1 : ''
   },
 
   /**
