@@ -1,6 +1,6 @@
 {
   "name": "z-validator",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "javascript String Object prototype extend",
   "scripts": {
     "dev": "node rollup",
@@ -39,6 +39,6 @@
     "rollup-plugin-replace": "^1.1.1",
     "rollup-plugin-uglify": "^1.0.1",
     "uglify-js": "^2.7.5",
-    "z-utils": "^1.4.1"
+    "z-utils": "^1.5.1"
   }
 }
