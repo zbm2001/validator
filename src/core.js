@@ -63,6 +63,7 @@ export default assign(String, {
   },
 
   roKeyboardCharacter: /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]+$/,
+  // 身份证前17位数字的计算校验位
   idNumberChecksum: function idNumberChecksum(d17) {
     var sum = 0
     d17.split('').reverse().forEach(function(n, i) {
@@ -70,6 +71,25 @@ export default assign(String, {
     })
     sum = (12 - sum % 11) % 11
     return sum > 9 ? 'X' : String(sum)
+  },
+  // 组织机构代码前8位数字的计算校验位
+  orgCodeChecksum: function orgCodeChecksum(d8) {
+    var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+        crcs = [3, 7, 9, 10, 5, 8, 4, 2],
+        o = {},
+        l = code.length,
+        c, sum = 0,
+        i = -1
+    while (++i < l) {
+      o[code[i]] = i
+    }
+    i = -1
+    while (++i < 8) {
+      c = d8.charAt(i)
+      sum += o[c] * crcs[i]
+    }
+    c = sum % 11
+    return c > 1 ? String(11 - c) : c ? 'X' : '0'
   }
 })
 
@@ -247,26 +267,8 @@ assign(String.prototype, String, {
    * @api public
    */
   isOrgCode () {
-    return this.roOrgCode.test(this) && this.slice(-1) === checksum(this)
     // 73766533-0
-    function checksum(v) {
-      var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
-        crcs = [3, 7, 9, 10, 5, 8, 4, 2],
-        o = {},
-        l = code.length,
-        c, sum = 0,
-        i = -1
-      while (++i < l) {
-        o[code[i]] = i
-      }
-      i = -1
-      while (++i < 8) {
-        c = v.charAt(i)
-        sum += o[c] * crcs[i]
-      }
-      c = sum % 11
-      return c > 1 ? String(11 - c) : c ? 'X' : '0'
-    }
+    return this.roOrgCode.test(this) && this.slice(-1) === String.orgCodeChecksum(this)
   },
 
   /**
