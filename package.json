@@ -1,6 +1,6 @@
 {
   "name": "z-validator",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "javascript String Object prototype extend",
   "scripts": {
     "dev": "node rollup",

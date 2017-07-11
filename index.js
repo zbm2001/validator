@@ -11,8 +11,8 @@ var core = zUtils.assign(String, {
   // http://1.0.0.0/ | http://1.0.0.0 | http://1.0.0.0: | http://1.0.0.0:/ | http://1.0.0.0:65535/
   // [泛域名.]? + 域名地址（至少一个字母） + .域名后缀（至少为2个字母） + [:端口号]?：
   // http://1.cn
-  rAbsPathI: /(?:^file:\/\/\/?[a-z]:|^(?!file:)[a-zA-Z][\w-]*:\/\/(?:(?:[\w-]{1,}\.){1,}[a-z]{2,}|(?:[1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?:\.(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])){3})(?::(?:(?:[1-5][0-9]|[1-9])[0-9]{0,3}|6(?:[0-4][0-9]{3}|5(?:[0-4][0-9]{2}|5(?:[0-2][0-9]|3[0-5]))))?)?)(?:$|\/)/i,
-  rURLAbsPathI: /^(?!file:)[a-zA-Z][\w-]*:\/\/(?:(?:[\w-]{1,}\.){1,}[a-z]{2,}|(?:[1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?:\.(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])){3})(?::(?:(?:[1-5][0-9]|[1-9])[0-9]{0,3}|6(?:[0-4][0-9]{3}|5(?:[0-4][0-9]{2}|5(?:[0-2][0-9]|3[0-5]))))?)?(?:$|\/)/i,
+  rAbsPathI: /(?:^file:\/\/\/?[a-z]:|^(?!file:)[a-z][\w-]*:\/\/(?:(?:[\w-]{1,}\.){1,}[a-z]{2,}|(?:[1-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])(?:\.(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])){3})(?::(?:(?:[1-5]\d|[1-9])\d{0,3}|6(?:[0-4]\d{3}|5(?:[0-4]\d{2}|5(?:[0-2]\d|3[0-5]))))?)?)(?:$|\/)/i,
+  rURLAbsPathI: /^(?!file:)[a-z][\w-]*:\/\/(?:(?:[\w-]{1,}\.){1,}[a-z]{2,}|(?:[1-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])(?:\.(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])){3})(?::(?:(?:[1-5]\d|[1-9])\d{0,3}|6(?:[0-4]\d{3}|5(?:[0-4]\d{2}|5(?:[0-2]\d|3[0-5]))))?)?(?:$|\/)/i,
   rFileAbsPathI: /^file:\/\/\/?[a-z]:(?:$|\/)/i,
   rProtocol: /^([a-zA-Z][\w-]*:)/,
   roNumber: /^\d+$/,
@@ -51,7 +51,7 @@ var core = zUtils.assign(String, {
 
   // rgb256色
   roHexColorI: /^#?([0-9A-F]{3}|[0-9A-F]{6})$/i,
-  roDate: /^\d{4}-(?:(?:0?2-(0[1-9]|[12][0-9]))|(?:0?[13578]|1[02])-(?:0?[1-9]|[1-2]\d|3[01])|(?:0?[469]|11)-(?:0?[1-9]|[1-2]\d|30))|(?:(?:(?:0[1-9]|[12][0-9])\/0?2)|(?:0?[1-9]|[1-2]\d|3[01])\/(?:0?[13578]|1[02])|(?:(?:0?[1-9]|[1-2]\d|30)\/0?[469]|11))\/\d{4}$/,
+  roDate: /^\d{4}-(?:(?:0?2-(0[1-9]|[12]\d))|(?:0?[13578]|1[02])-(?:0?[1-9]|[1-2]\d|3[01])|(?:0?[469]|11)-(?:0?[1-9]|[1-2]\d|30))|(?:(?:(?:0[1-9]|[12]\d)\/0?2)|(?:0?[1-9]|[1-2]\d|3[01])\/(?:0?[13578]|1[02])|(?:(?:0?[1-9]|[1-2]\d|30)\/0?[469]|11))\/\d{4}$/,
   roMonth: /^(?:0?[1-9]|1[0-2])$/,
   roWeek: /^(?:0?[1-9]|[1-4]\d|5[0-2])$/,
   roTime: /^(?:[0-1]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
@@ -64,7 +64,35 @@ var core = zUtils.assign(String, {
     all: /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i
   },
 
-  roKeyboardCharacter: /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]+$/
+  roKeyboardCharacter: /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]+$/,
+  // 身份证前17位数字的计算校验位
+  idNumberChecksum: function idNumberChecksum(d17) {
+    var sum = 0;
+    d17.split('').reverse().forEach(function(n, i) {
+      sum += n * (Math.pow(2, (i + 2) - 1) % 11);
+    });
+    sum = (12 - sum % 11) % 11;
+    return sum > 9 ? 'X' : String(sum)
+  },
+  // 组织机构代码前8位数字的计算校验位
+  orgCodeChecksum: function orgCodeChecksum(d8) {
+    var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+        crcs = [3, 7, 9, 10, 5, 8, 4, 2],
+        o = {},
+        l = code.length,
+        c, sum = 0,
+        i = -1;
+    while (++i < l) {
+      o[code[i]] = i;
+    }
+    i = -1;
+    while (++i < 8) {
+      c = d8.charAt(i);
+      sum += o[c] * crcs[i];
+    }
+    c = sum % 11;
+    return c > 1 ? String(11 - c) : c ? 'X' : '0'
+  }
 });
 
 
@@ -190,25 +218,20 @@ zUtils.assign(String.prototype, String, {
 
   /**
    * 身份证号：前6位是地区编码
-   * @param {string} s
+   * @param {Number} startYear
+   * @param {Number} endYear
    * @returns {boolean}
    * @api public
    */
-  isIdNumber: function isIdNumber () {
-    return this.roIdNumber.test(this) && this.slice(0, 6).isAreaNumber() && checkDate(this.slice(6, 14)) && this.charAt(17).toUpperCase() === checksum(this.slice(0, 17))
+  isIdNumber: function isIdNumber (startYear, endYear) {
+    return this.roIdNumber.test(this) && this.slice(0, 6).isAreaNumber() && checkDate(this.slice(6, 14)) && this.charAt(17).toUpperCase() === String.idNumberChecksum(this.slice(0, 17))
 
     function checkDate(s) {
       var year = s.slice(0, 4);
-      return year >= 1900 && 　year <= new Date().getFullYear() && (year + '-' + s.slice(4, 6) + '-' + s.slice(6, 8)).isDate()
-    }
+      startYear = parseInt(startYear) || 1900;
+      endYear = parseInt(endYear) || new Date().getFullYear();
 
-    function checksum(v) {
-      var sum = 0;
-      v.split('').reverse().forEach(function(n, i) {
-        sum += n * (Math.pow(2, (i + 2) - 1) % 11);
-      });
-      sum = (12 - sum % 11) % 11;
-      return sum > 9 ? 'X' : String(sum)
+      return year >= startYear && year <= endYear && (year + '-' + s.slice(4, 6) + '-' + s.slice(6, 8)).isDate()
     }
   },
 
@@ -246,26 +269,8 @@ zUtils.assign(String.prototype, String, {
    * @api public
    */
   isOrgCode: function isOrgCode () {
-    return this.roOrgCode.test(this) && this.slice(-1) === checksum(this)
     // 73766533-0
-    function checksum(v) {
-      var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
-        crcs = [3, 7, 9, 10, 5, 8, 4, 2],
-        o = {},
-        l = code.length,
-        c, sum = 0,
-        i = -1;
-      while (++i < l) {
-        o[code[i]] = i;
-      }
-      i = -1;
-      while (++i < 8) {
-        c = v.charAt(i);
-        sum += o[c] * crcs[i];
-      }
-      c = sum % 11;
-      return c > 1 ? String(11 - c) : c ? 'X' : '0'
-    }
+    return this.roOrgCode.test(this) && this.slice(-1) === String.orgCodeChecksum(this)
   },
 
   /**
