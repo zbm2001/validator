@@ -62,7 +62,15 @@ export default assign(String, {
     all: /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i
   },
 
-  roKeyboardCharacter: /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]+$/
+  roKeyboardCharacter: /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]+$/,
+  idNumberChecksum: function idNumberChecksum(d17) {
+    var sum = 0
+    d17.split('').reverse().forEach(function(n, i) {
+      sum += n * (Math.pow(2, (i + 2) - 1) % 11)
+    })
+    sum = (12 - sum % 11) % 11
+    return sum > 9 ? 'X' : String(sum)
+  }
 })
 
 
@@ -188,25 +196,20 @@ assign(String.prototype, String, {
 
   /**
    * 身份证号：前6位是地区编码
-   * @param {string} s
+   * @param {Number} startYear
+   * @param {Number} endYear
    * @returns {boolean}
    * @api public
    */
-  isIdNumber () {
-    return this.roIdNumber.test(this) && this.slice(0, 6).isAreaNumber() && checkDate(this.slice(6, 14)) && this.charAt(17).toUpperCase() === checksum(this.slice(0, 17))
+  isIdNumber (startYear, endYear) {
+    return this.roIdNumber.test(this) && this.slice(0, 6).isAreaNumber() && checkDate(this.slice(6, 14)) && this.charAt(17).toUpperCase() === String.idNumberChecksum(this.slice(0, 17))
 
     function checkDate(s) {
       var year = s.slice(0, 4)
-      return year >= 1900 && 　year <= new Date().getFullYear() && (year + '-' + s.slice(4, 6) + '-' + s.slice(6, 8)).isDate()
-    }
+      startYear = parseInt(startYear) || 1900
+      endYear = parseInt(endYear) || new Date().getFullYear()
 
-    function checksum(v) {
-      var sum = 0
-      v.split('').reverse().forEach(function(n, i) {
-        sum += n * (Math.pow(2, (i + 2) - 1) % 11)
-      })
-      sum = (12 - sum % 11) % 11
-      return sum > 9 ? 'X' : String(sum)
+      return year >= startYear && year <= endYear && (year + '-' + s.slice(4, 6) + '-' + s.slice(6, 8)).isDate()
     }
   },
 
