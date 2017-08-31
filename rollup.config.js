@@ -13,7 +13,7 @@ const banner = '/*\n' +
 const external = Object.keys(pkg.devDependencies)
 
 module.exports = {
-  entry: 'src/index.js',
+  input: 'src/index.js', // entry -> input
   plugins: [
     // resolve({
     //   jsnext: true,
@@ -31,34 +31,34 @@ module.exports = {
     }),
     replace({
       exclude: 'node_modules/**',
-      ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
+      ENV: JSON.stringify(process.env.NODE_ENV || 'development')
     })
   ],
   external: external,
   targets: [
     {
-      dest: 'index.js',
+      file: 'index.js', // dest -> file
       format: 'cjs'
     }/*, {
-      dest: 'validator.amd.js',
+      file: 'validator.amd.js',
       format: 'amd'
     }, {
-      dest: 'validator.cjs.js',
+      file: 'validator.cjs.js',
       format: 'cjs'
     }, {
-      dest: 'validator.es.js',
+      file: 'validator.es.js',
       format: 'es'
     }, {
-      dest: 'validator.iife.js',
+      file: 'validator.iife.js',
       format: 'iife'
     }, {
-      dest: 'validator.umd.js',
+      file: 'validator.umd.js',
       format: 'umd'
     }*/
   ],
   banner: banner,
   // format: 'iife', // cjs amd es6 umd iife
-  moduleName: 'Validator', // umd 或 iife 模式下，若入口文件含 export，必须加上该属性
-  // dest: 'validator.js', // 输出文件
-  // sourceMap: false   // 调试编译
+  name: 'Validator' // umd 或 iife 模式下，若入口文件含 export，必须加上该属性 moduleName -> name
+  // file: 'validator.js', // 输出文件 dest -> file
+  // sourcemap: false   // 调试编译 sourceMap -> sourcemap
 }

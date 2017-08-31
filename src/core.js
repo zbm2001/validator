@@ -1,6 +1,6 @@
-import {assign} from 'z-utils'
+import 'z-utils'
 
-export default assign(String, {
+Object.assign(String, {
   // "ro" 前缀表示 regexp only，即字符串从行首到行尾只包含指定的匹配模式
   // 绝对路径的URL
   // 本地磁盘文件路径：
@@ -93,8 +93,7 @@ export default assign(String, {
   }
 })
 
-
-assign(String.prototype, String, {
+Object.assign(String.prototype, {
   /**
    * 数字
    * @param {string} s
@@ -488,3 +487,16 @@ assign(String.prototype, String, {
   }
 
 })
+
+Object.keys(String.prototype).forEach(name => {
+  let fn = String.prototype[name]
+  if (typeof fn === 'function') {
+    String[name] = function (str, ...args) {
+      return fn.apply(String(str), args)
+    }
+  }
+})
+
+Object.assign(String.prototype, String)
+
+export default String

@@ -1,8 +1,8 @@
 'use strict';
 
-var zUtils = require('z-utils');
+require('z-utils');
 
-var core = zUtils.assign(String, {
+Object.assign(String, {
   // "ro" 前缀表示 regexp only，即字符串从行首到行尾只包含指定的匹配模式
   // 绝对路径的URL
   // 本地磁盘文件路径：
@@ -95,8 +95,7 @@ var core = zUtils.assign(String, {
   }
 });
 
-
-zUtils.assign(String.prototype, String, {
+Object.assign(String.prototype, {
   /**
    * 数字
    * @param {string} s
@@ -491,4 +490,18 @@ zUtils.assign(String.prototype, String, {
 
 });
 
-module.exports = core;
+Object.keys(String.prototype).forEach(function (name) {
+  var fn = String.prototype[name];
+  if (typeof fn === 'function') {
+    String[name] = function (str) {
+      var args = [], len = arguments.length - 1;
+      while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
+
+      return fn.apply(String(str), args)
+    };
+  }
+});
+
+Object.assign(String.prototype, String);
+
+module.exports = String;
