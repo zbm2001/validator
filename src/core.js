@@ -93,7 +93,7 @@ Object.assign(String, {
   }
 })
 
-Object.assign(String.prototype, {
+Object.assign(String.prototype, String, {
   /**
    * 数字
    * @param {string} s
@@ -496,7 +496,5 @@ Object.keys(String.prototype).forEach(name => {
     }
   }
 })
-
-Object.assign(String.prototype, String)
 
 export default String

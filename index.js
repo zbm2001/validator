@@ -95,7 +95,7 @@ Object.assign(String, {
   }
 });
 
-Object.assign(String.prototype, {
+Object.assign(String.prototype, String, {
   /**
    * 数字
    * @param {string} s
@@ -501,7 +501,5 @@ Object.keys(String.prototype).forEach(function (name) {
     };
   }
 });
-
-Object.assign(String.prototype, String);
 
 module.exports = String;
