@@ -68,7 +68,7 @@ Object.assign(String, {
   // 身份证前17位数字的计算校验位
   idNumberChecksum: function idNumberChecksum(d17) {
     var sum = 0;
-    d17.split('').reverse().forEach(function(n, i) {
+    d17.slice(0, 17).split('').reverse().forEach(function(n, i) {
       sum += n * (Math.pow(2, (i + 2) - 1) % 11);
     });
     sum = (12 - sum % 11) % 11;
@@ -223,7 +223,7 @@ Object.assign(String.prototype, String, {
    * @api public
    */
   isIdNumber: function isIdNumber (startYear, endYear) {
-    return this.roIdNumber.test(this) && this.slice(0, 6).isAreaNumber() && checkDate(this.slice(6, 14)) && this.charAt(17).toUpperCase() === String.idNumberChecksum(this.slice(0, 17))
+    return this.roIdNumber.test(this) && this.slice(0, 6).isAreaNumber() && checkDate(this.slice(6, 14)) && this.charAt(17).toUpperCase() === String.idNumberChecksum(this)
 
     function checkDate(s) {
       var year = s.slice(0, 4);
@@ -492,7 +492,7 @@ Object.assign(String.prototype, String, {
 
 Object.keys(String.prototype).forEach(function (name) {
   var fn = String.prototype[name];
-  if (typeof fn === 'function') {
+  if (typeof fn === 'function' && !String[name]) {
     String[name] = function (str) {
       var args = [], len = arguments.length - 1;
       while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
