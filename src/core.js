@@ -62,35 +62,7 @@ Object.assign(String, {
     all: /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i
   },
 
-  roKeyboardCharacter: /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]+$/,
-  // 身份证前17位数字的计算校验位
-  idNumberChecksum: function idNumberChecksum(d17) {
-    var sum = 0
-    d17.slice(0, 17).split('').reverse().forEach(function(n, i) {
-      sum += n * (Math.pow(2, (i + 2) - 1) % 11)
-    })
-    sum = (12 - sum % 11) % 11
-    return sum > 9 ? 'X' : String(sum)
-  },
-  // 组织机构代码前8位数字的计算校验位
-  orgCodeChecksum: function orgCodeChecksum(d8) {
-    var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
-        crcs = [3, 7, 9, 10, 5, 8, 4, 2],
-        o = {},
-        l = code.length,
-        c, sum = 0,
-        i = -1
-    while (++i < l) {
-      o[code[i]] = i
-    }
-    i = -1
-    while (++i < 8) {
-      c = d8.charAt(i)
-      sum += o[c] * crcs[i]
-    }
-    c = sum % 11
-    return c > 1 ? String(11 - c) : c ? 'X' : '0'
-  }
+  roKeyboardCharacter: /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]+$/
 })
 
 Object.assign(String.prototype, String, {
@@ -221,7 +193,7 @@ Object.assign(String.prototype, String, {
    * @api public
    */
   isIdNumber (startYear, endYear) {
-    return this.roIdNumber.test(this) && this.slice(0, 6).isAreaNumber() && checkDate(this.slice(6, 14)) && this.charAt(17).toUpperCase() === String.idNumberChecksum(this)
+    return this.roIdNumber.test(this) && this.slice(0, 6).isAreaNumber() && checkDate(this.slice(6, 14)) && this.charAt(17).toUpperCase() === this.idNumberChecksum()
 
     function checkDate(s) {
       var year = s.slice(0, 4)
@@ -230,6 +202,20 @@ Object.assign(String.prototype, String, {
 
       return year >= startYear && year <= endYear && (year + '-' + s.slice(4, 6) + '-' + s.slice(6, 8)).isDate()
     }
+  },
+
+  /**
+   * 身份证前17位数字的计算校验位
+   * @returns {Number}
+   * @api public
+   */
+  idNumberChecksum: function idNumberChecksum() {
+    var sum = 0
+    this.slice(0, 17).split('').reverse().forEach(function(n, i) {
+      sum += n * (Math.pow(2, (i + 2) - 1) % 11)
+    })
+    sum = (12 - sum % 11) % 11
+    return sum > 9 ? 'X' : String(sum)
   },
 
   /**
@@ -267,7 +253,31 @@ Object.assign(String.prototype, String, {
    */
   isOrgCode () {
     // 73766533-0
-    return this.roOrgCode.test(this) && this.slice(-1) === String.orgCodeChecksum(this)
+    return this.roOrgCode.test(this) && this.slice(-1) === this.orgCodeChecksum()
+  },
+
+  /**
+   * 组织机构代码前8位数字的计算校验位
+   * @returns {Number}
+   * @api public
+   */
+  orgCodeChecksum: function orgCodeChecksum() {
+    var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+        crcs = [3, 7, 9, 10, 5, 8, 4, 2],
+        o = {},
+        l = code.length,
+        c, sum = 0,
+        i = -1
+    while (++i < l) {
+      o[code[i]] = i
+    }
+    i = -1
+    while (++i < 8) {
+      c = this.charAt(i)
+      sum += o[c] * crcs[i]
+    }
+    c = sum % 11
+    return c > 1 ? String(11 - c) : c ? 'X' : '0'
   },
 
   /**
@@ -488,9 +498,13 @@ Object.assign(String.prototype, String, {
 
 })
 
+Object.keys(String).forEach(name => {
+
+})
+
 Object.keys(String.prototype).forEach(name => {
   let fn = String.prototype[name]
-  if (typeof fn === 'function' && !String[name]) {
+  if (typeof fn === 'function') {
     String[name] = function (str, ...args) {
       return fn.apply(String(str), args)
     }
