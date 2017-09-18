@@ -498,10 +498,6 @@ Object.assign(String.prototype, String, {
 
 })
 
-Object.keys(String).forEach(name => {
-
-})
-
 Object.keys(String.prototype).forEach(name => {
   let fn = String.prototype[name]
   if (typeof fn === 'function') {

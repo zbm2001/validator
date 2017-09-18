@@ -502,10 +502,6 @@ Object.assign(String.prototype, String, {
 
 });
 
-Object.keys(String).forEach(function (name) {
-
-});
-
 Object.keys(String.prototype).forEach(function (name) {
   var fn = String.prototype[name];
   if (typeof fn === 'function') {
