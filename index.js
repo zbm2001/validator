@@ -14,6 +14,7 @@ Object.assign(String, {
   rAbsPathI: /(?:^file:\/\/\/?[a-z]:|^(?!file:)[a-z][\w-]*:\/\/(?:(?:[\w-]{1,}\.){1,}[a-z]{2,}|(?:[1-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])(?:\.(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])){3})(?::(?:(?:[1-5]\d|[1-9])\d{0,3}|6(?:[0-4]\d{3}|5(?:[0-4]\d{2}|5(?:[0-2]\d|3[0-5]))))?)?)(?:$|\/)/i,
   rURLAbsPathI: /^(?!file:)[a-z][\w-]*:\/\/(?:(?:[\w-]{1,}\.){1,}[a-z]{2,}|(?:[1-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])(?:\.(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])){3})(?::(?:(?:[1-5]\d|[1-9])\d{0,3}|6(?:[0-4]\d{3}|5(?:[0-4]\d{2}|5(?:[0-2]\d|3[0-5]))))?)?(?:$|\/)/i,
   rFileAbsPathI: /^file:\/\/\/?[a-z]:(?:$|\/)/i,
+  rLocalhostPathI: /^(?!file:)[a-z][\w-]*:\/\/localhost(?::(?:(?:[1-5]\d|[1-9])\d{0,3}|6(?:[0-4]\d{3}|5(?:[0-4]\d{2}|5(?:[0-2]\d|3[0-5]))))?)?(?:$|\/)/i,
   rProtocol: /^([a-zA-Z][\w-]*:)/,
   roNumber: /^\d+$/,
   roInt: /^[-+]?\d+$/,
@@ -197,7 +198,7 @@ Object.assign(String.prototype, String, {
   isIdNumber: function isIdNumber (startYear, endYear) {
     return this.roIdNumber.test(this) && this.slice(0, 6).isAreaNumber() && checkDate(this.slice(6, 14)) && this.charAt(17).toUpperCase() === this.idNumberChecksum()
 
-    function checkDate(s) {
+    function checkDate (s) {
       var year = s.slice(0, 4);
       startYear = parseInt(startYear) || 1900;
       endYear = parseInt(endYear) || new Date().getFullYear();
@@ -211,9 +212,9 @@ Object.assign(String.prototype, String, {
    * @returns {Number}
    * @api public
    */
-  idNumberChecksum: function idNumberChecksum() {
+  idNumberChecksum: function idNumberChecksum () {
     var sum = 0;
-    this.slice(0, 17).split('').reverse().forEach(function(n, i) {
+    this.slice(0, 17).split('').reverse().forEach(function (n, i) {
       sum += n * (Math.pow(2, (i + 2) - 1) % 11);
     });
     sum = (12 - sum % 11) % 11;
@@ -228,15 +229,16 @@ Object.assign(String.prototype, String, {
    */
   isBusinessLicenseNumber: function isBusinessLicenseNumber () {
     return this.length === 15 && this.roBusinessLicenseNumber.test(this) && checksum(this)
+
     // 440000000085209
-    function checksum(v) {
+    function checksum (v) {
       var a = [],
-        m = 10,
-        p = [m],
-        s = [],
-        i = -1,
-        l = v.length,
-        t;
+          m = 10,
+          p = [m],
+          s = [],
+          i = -1,
+          l = v.length,
+          t;
       while (++i < l) {
         a[i] = parseInt(v.charAt(i));
         s[i] = (p[i] % (m + 1)) + a[i];
@@ -263,7 +265,7 @@ Object.assign(String.prototype, String, {
    * @returns {Number}
    * @api public
    */
-  orgCodeChecksum: function orgCodeChecksum() {
+  orgCodeChecksum: function orgCodeChecksum () {
     var this$1 = this;
 
     var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
@@ -344,6 +346,16 @@ Object.assign(String.prototype, String, {
    */
   isAbsPath: function isAbsPath () {
     return this.rAbsPathI.test(this)
+  },
+
+  /**
+   * 本地主机路径格式
+   * @param {string} s
+   * @returns {boolean}
+   * @api public
+   */
+  isLocalhostPath: function isLocalhostPath () {
+    return this.rLocalhostPathI.test(this)
   },
 
   /**
@@ -475,8 +487,8 @@ Object.assign(String.prototype, String, {
    */
   checkKeyboardCharacterRank: function checkKeyboardCharacterRank (minLength, maxLength) {
     var l = this.length,
-      min = 1,
-      max = Infinity;
+        min = 1,
+        max = Infinity;
 
     (minLength = Number(minLength)) === minLength && (min = minLength < 1 ? 1 : minLength);
     (maxLength = Number(maxLength)) === maxLength && (max = maxLength < min ? min : maxLength);
@@ -504,7 +516,8 @@ Object.assign(String.prototype, String, {
 
 Object.keys(String.prototype).forEach(function (name) {
   var fn = String.prototype[name];
-  if (typeof fn === 'function') {
+  if (typeof fn === 'function'
+  ) {
     String[name] = function (str) {
       var args = [], len = arguments.length - 1;
       while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
