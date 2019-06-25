@@ -1,8 +1,14 @@
+/*
+ * @name: @zbm1/validator
+ * @version: 1.7.1
+ * @description: javascript String Object prototype extend
+ * @author: zbm2001@aliyun.com
+ * @license: Apache 2.0
+ */
+
 'use strict';
 
-require('z-utils');
-
-Object.assign(String, {
+var regexes = {
   // "ro" 前缀表示 regexp only，即字符串从行首到行尾只包含指定的匹配模式
   // 绝对路径的URL
   // 本地磁盘文件路径：
@@ -66,9 +72,9 @@ Object.assign(String, {
   },
 
   roKeyboardCharacter: /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]+$/
-});
+};
 
-Object.assign(String.prototype, String, {
+var prototype = {
   /**
    * 数字
    * @param {string} s
@@ -266,8 +272,6 @@ Object.assign(String.prototype, String, {
    * @api public
    */
   orgCodeChecksum: function orgCodeChecksum () {
-    var this$1 = this;
-
     var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
         crcs = [3, 7, 9, 10, 5, 8, 4, 2],
         o = {},
@@ -279,7 +283,7 @@ Object.assign(String.prototype, String, {
     }
     i = -1;
     while (++i < 8) {
-      c = this$1.charAt(i);
+      c = this.charAt(i);
       sum += o[c] * crcs[i];
     }
     c = sum % 11;
@@ -512,12 +516,14 @@ Object.assign(String.prototype, String, {
 
   }
 
-});
+};
 
-Object.keys(String.prototype).forEach(function (name) {
-  var fn = String.prototype[name];
-  if (typeof fn === 'function'
-  ) {
+Object.assign(String, regexes);
+Object.assign(String.prototype, regexes, prototype);
+
+Object.keys(prototype).forEach(function (name) {
+  var fn = prototype[name];
+  if (typeof fn === 'function') {
     String[name] = function (str) {
       var args = [], len = arguments.length - 1;
       while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];

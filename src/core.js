@@ -1,6 +1,5 @@
-import 'z-utils'
 
-Object.assign(String, {
+const regexes = {
   // "ro" 前缀表示 regexp only，即字符串从行首到行尾只包含指定的匹配模式
   // 绝对路径的URL
   // 本地磁盘文件路径：
@@ -64,9 +63,9 @@ Object.assign(String, {
   },
 
   roKeyboardCharacter: /^[\w~`!@#$%^&*()_\-+={}[\]|\\:;"<>,.?\/]+$/
-})
+}
 
-Object.assign(String.prototype, String, {
+const prototype = {
   /**
    * 数字
    * @param {string} s
@@ -210,7 +209,7 @@ Object.assign(String.prototype, String, {
    * @returns {Number}
    * @api public
    */
-  idNumberChecksum: function idNumberChecksum () {
+  idNumberChecksum () {
     var sum = 0
     this.slice(0, 17).split('').reverse().forEach(function (n, i) {
       sum += n * (Math.pow(2, (i + 2) - 1) % 11)
@@ -263,7 +262,7 @@ Object.assign(String.prototype, String, {
    * @returns {Number}
    * @api public
    */
-  orgCodeChecksum: function orgCodeChecksum () {
+  orgCodeChecksum () {
     var code = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
         crcs = [3, 7, 9, 10, 5, 8, 4, 2],
         o = {},
@@ -508,12 +507,14 @@ Object.assign(String.prototype, String, {
 
   }
 
-})
+}
 
-Object.keys(String.prototype).forEach(name => {
-  let fn = String.prototype[name]
-  if (typeof fn === 'function'
-  ) {
+Object.assign(String, regexes)
+Object.assign(String.prototype, regexes, prototype)
+
+Object.keys(prototype).forEach(name => {
+  let fn = prototype[name]
+  if (typeof fn === 'function') {
     String[name] = function (str, ...args) {
       return fn.apply(String(str), args)
     }
