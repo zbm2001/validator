@@ -1,6 +1,6 @@
 {
   "name": "@zbm1/validator",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "javascript String Object prototype extend",
   "scripts": {
     "dev": "node rollup",
